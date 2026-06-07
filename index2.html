@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>FIFA World Cup 2026 - Top 20</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+    --gold: #FFD700;
+    --gold2: #FFA500;
+    --dark: #020008;
+    --purple: #6a0dad;
+    --purple2: #a855f7;
+    --green: #00ff88;
+    --red: #ff3860;
+    --white: #f0f0f0;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+    background: var(--dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cairo', sans-serif;
+    overflow: hidden;
+    position: relative;
+}
+
+/* خلفية نجوم */
+body::before {
+    content:'';
+    position:fixed; inset:0;
+    background: 
+        radial-gradient(ellipse at 20% 50%, rgba(106,13,173,0.15) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(255,215,0,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 60% 80%, rgba(0,255,136,0.05) 0%, transparent 40%);
+    pointer-events:none; z-index:0;
+}
+
+#stars {
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+}
+
+#app {
+    position: relative; z-index:1;
+    display: flex; flex-direction: column;
+    align-items: center; width: 100%;
+    padding: 10px 0;
+}
+
+/* ===== HEADER ===== */
+#header {
+    text-align: center;
+    margin-bottom: 10px;
+}
+#header .trophy { font-size: 2.2rem; line-height:1; }
+#header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem;
+    letter-spacing: 4px;
+    background: linear-gradient(135deg, var(--gold), var(--gold2), var(--white));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: none;
+    line-height: 1.1;
+}
+#header .sub {
+    font-size: 0.85rem;
+    color: rgba(255,215,0,0.6);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* ===== CONTROLS ===== */
+#controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#info {
+    font-size: 1.15rem;
+    font-weight: 900;
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(255,215,0,0.5);
+    min-width: 180px;
+    text-align: center;
+}
+
+.btn {
+    padding: 7px 20px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.9rem; font-weight: 700;
+    border: none; border-radius: 25px; cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+.btn:hover { transform: scale(1.08); }
+
+#langBtn {
+    background: linear-gradient(135deg, #1e40af, #3b82f6);
+    color: #fff;
+    box-shadow: 0 0 14px rgba(59,130,246,0.5);
+}
+#langBtn:hover { box-shadow: 0 0 24px rgba(59,130,246,0.8); }
+
+#soundBtn {
+    background: linear-gradient(135deg, #064e3b, #10b981);
+    color: #fff;
+    box-shadow: 0 0 14px rgba(16,185,129,0.5);
+    font-size: 1rem;
+}
+#soundBtn:hover { box-shadow: 0 0 24px rgba(16,185,129,0.8); }
+
+#replayBtn {
+    padding: 10px 32px;
+    font-size:1.1rem; font-weight:bold; color:#fff;
+    background:linear-gradient(135deg,#7c3aed,#a855f7);
+    border:none; border-radius:30px; cursor:pointer;
+    box-shadow:0 0 20px #a855f788;
+    transition:transform 0.15s, box-shadow 0.15s;
+}
+#replayBtn:hover { transform:scale(1.07); box-shadow:0 0 32px #a855f7cc; }
+
+/* ===== شاشة الاختيار ===== */
+#setupScreen {
+    position: fixed; inset: 0; z-index: 100;
+    background: #020008;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 18px;
+}
+#setupScreen .trophy { font-size: 3rem; }
+#setupScreen h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem; letter-spacing: 4px;
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+#setupScreen p {
+    color: rgba(255,255,255,0.55); font-size: 0.9rem; text-align:center;
+    max-width: 280px; line-height: 1.6;
+}
+#countWrap {
+    display: flex; align-items: center; gap: 14px;
+}
+#countInput {
+    width: 80px; text-align: center;
+    padding: 10px 6px;
+    font-size: 1.6rem; font-weight: 900;
+    font-family: 'Bebas Neue', sans-serif;
+    color: var(--gold);
+    background: rgba(255,255,255,0.06);
+    border: 2px solid rgba(168,85,247,0.5);
+    border-radius: 14px; outline: none;
+    -moz-appearance: textfield;
+}
+#countInput::-webkit-inner-spin-button,
+#countInput::-webkit-outer-spin-button { -webkit-appearance: none; }
+.countArrow {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg,#6a0dad,#a855f7);
+    border: none; border-radius: 50%; cursor: pointer;
+    color: #fff; font-size: 1.3rem; font-weight: bold;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 12px rgba(168,85,247,0.5);
+    transition: transform 0.12s;
+}
+.countArrow:hover { transform: scale(1.15); }
+#startBtn {
+    padding: 13px 44px;
+    font-size: 1.15rem; font-weight: 900;
+    font-family: 'Cairo', sans-serif;
+    color: #000;
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    border: none; border-radius: 30px; cursor: pointer;
+    box-shadow: 0 0 24px rgba(255,215,0,0.5);
+    transition: transform 0.15s, box-shadow 0.15s;
+    letter-spacing: 1px;
+}
+#startBtn:hover { transform: scale(1.07); box-shadow: 0 0 36px rgba(255,215,0,0.8); }
+.presets {
+    display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+    max-width: 300px;
+}
+.preset {
+    padding: 5px 14px;
+    font-size: 0.82rem; font-weight: 700;
+    color: rgba(255,255,255,0.7);
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(168,85,247,0.3);
+    border-radius: 20px; cursor: pointer;
+    transition: all 0.15s;
+}
+.preset:hover { background: rgba(168,85,247,0.25); color:#fff; border-color:#a855f7; }
+
+/* ===== وضع اختيار المنتخبات ===== */
+#modeToggle {
+    display: flex; gap: 8px;
+}
+.modeBtn {
+    padding: 6px 18px;
+    font-size: 0.82rem; font-weight: 700;
+    border: 1px solid rgba(168,85,247,0.4);
+    border-radius: 20px; cursor: pointer;
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.6);
+    transition: all 0.15s;
+}
+.modeBtn.active {
+    background: linear-gradient(135deg,#6a0dad,#a855f7);
+    color: #fff; border-color: #a855f7;
+    box-shadow: 0 0 12px rgba(168,85,247,0.5);
+}
+
+#teamPicker {
+    display: none;
+    flex-direction: column; align-items: center; gap: 10px;
+    width: 100%; max-width: 340px;
+}
+#pickerInfo {
+    font-size: 0.8rem; color: rgba(255,215,0,0.7);
+    font-weight: 700; letter-spacing: 1px; text-align: center;
+}
+#teamGrid {
+    display: grid; grid-template-columns: repeat(4,1fr);
+    gap: 7px; width: 100%;
+    max-height: 260px; overflow-y: auto;
+    padding: 4px 2px;
+}
+#teamGrid::-webkit-scrollbar { width: 4px; }
+#teamGrid::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius:4px; }
+#teamGrid::-webkit-scrollbar-thumb { background: #a855f7; border-radius:4px; }
+
+.teamCard {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 2px; padding: 6px 4px;
+    background: rgba(255,255,255,0.05);
+    border: 1.5px solid rgba(168,85,247,0.2);
+    border-radius: 10px; cursor: pointer;
+    transition: all 0.15s; user-select: none;
+}
+.teamCard:hover { border-color: rgba(168,85,247,0.6); background: rgba(168,85,247,0.12); }
+.teamCard.selected {
+    border-color: var(--gold);
+    background: rgba(255,215,0,0.15);
+    box-shadow: 0 0 10px rgba(255,215,0,0.3);
+}
+.teamCard .tcFlag { font-size: 1.4rem; line-height: 1; }
+.teamCard .tcName {
+    font-size: 0.52rem; font-weight: 700;
+    color: rgba(255,255,255,0.7); text-align: center;
+    letter-spacing: 0.5px;
+}
+.teamCard.selected .tcName { color: var(--gold); }
+
+#pickerActions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.pickerBtn {
+    padding: 5px 14px; font-size: 0.76rem; font-weight: 700;
+    border: 1px solid rgba(168,85,247,0.4);
+    border-radius: 16px; cursor: pointer;
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.7); transition: all 0.15s;
+}
+.pickerBtn:hover { background: rgba(168,85,247,0.2); color:#fff; }
+
+/* ===== CANVAS WRAPPER ===== */
+#canvasWrap {
+    position: relative;
+    width: 352px; height: 352px;
+}
+
+canvas {
+    display: block;
+    border-radius: 50%;
+    filter: drop-shadow(0 0 30px rgba(106,13,173,0.4));
+}
+
+/* شارة FIFA */
+#fifaBadge {
+    position: absolute;
+    top: -14px; left: 50%; transform: translateX(-50%);
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    color: #000;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    padding: 3px 14px;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(255,215,0,0.6);
+    white-space: nowrap;
+    z-index: 10;
+}
+
+/* عداد رانكينج */
+#rankList {
+    position: absolute;
+    right: -130px; top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 3px;
+    max-height: 380px; overflow: hidden;
+}
+.rankItem {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 0.72rem; color: rgba(255,255,255,0.55);
+    transition: color 0.3s, opacity 0.3s;
+    white-space: nowrap;
+}
+.rankItem.eliminated { opacity: 0.25; text-decoration: line-through; }
+.rankItem .rNum { color: var(--gold); font-weight: 700; min-width: 18px; }
+.rankItem .rFlag { font-size: 0.95rem; }
+
+/* ===== WIN OVERLAY ===== */
+#winOverlay {
+    display: none;
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    background: rgba(2,0,8,0.6);
+    flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 20;
+}
+#winFlag { font-size: 80px; line-height:1; }
+#winName {
+    font-size: 1.3rem; font-weight: 900;
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(255,215,0,0.8);
+    margin-top: 4px; text-align: center;
+}
+</style>
+</head>
+<body>
+
+<canvas id="stars_bg" style="position:fixed;inset:0;z-index:0;pointer-events:none;width:100%;height:100%;"></canvas>
+
+<!-- شاشة الاختيار -->
+<div id="setupScreen">
+    <div class="trophy">🏆</div>
+    <h2 id="setupTitle">WORLD CUP 2026</h2>
+
+    <!-- وضع الاختيار -->
+    <div id="modeToggle">
+        <button class="modeBtn active" id="modeRandom" onclick="setMode('random')">🎲 Random</button>
+        <button class="modeBtn"        id="modePick"   onclick="setMode('pick')">✋ Pick Teams</button>
+    </div>
+
+    <!-- وضع العشوائي -->
+    <div id="randomSection">
+        <p id="setupDesc">Choose number of teams (2–20) selected randomly from FIFA Top 20</p>
+        <div class="presets">
+            <span class="preset" onclick="setCount(2)">2</span>
+            <span class="preset" onclick="setCount(4)">4</span>
+            <span class="preset" onclick="setCount(8)">8</span>
+            <span class="preset" onclick="setCount(10)">10</span>
+            <span class="preset" onclick="setCount(16)">16</span>
+            <span class="preset" onclick="setCount(20)">20</span>
+        </div>
+        <div id="countWrap">
+            <button class="countArrow" onclick="changeCount(-1)">−</button>
+            <input id="countInput" type="number" min="2" max="20" value="20">
+            <button class="countArrow" onclick="changeCount(1)">+</button>
+        </div>
+    </div>
+
+    <!-- وضع الاختيار اليدوي -->
+    <div id="teamPicker">
+        <div id="pickerInfo">Select 2–20 teams (0 selected)</div>
+        <div id="teamGrid"></div>
+        <div id="pickerActions">
+            <button class="pickerBtn" onclick="selectAll()">✅ All</button>
+            <button class="pickerBtn" onclick="clearAll()">❌ Clear</button>
+            <button class="pickerBtn" onclick="selectRandom5()">🎲 Random 5</button>
+        </div>
+    </div>
+
+    <button id="startBtn" onclick="startGame()">▶ Start</button>
+</div>
+
+<div id="app">
+    <div id="header">
+        <div class="trophy">🏆</div>
+        <h1 id="mainTitle">WORLD CUP 2026</h1>
+        <div class="sub" id="subTitle">Top 20 Teams • FIFA Ranking</div>
+    </div>
+
+    <div id="controls">
+        <button class="btn" id="langBtn" onclick="toggleLang()">عر</button>
+        <div id="info">Teams remaining: 20</div>
+    </div>
+
+    <div id="canvasWrap">
+        <div id="fifaBadge">FIFA RANKING 2026</div>
+        <canvas id="c" width="352" height="352"></canvas>
+        <div id="rankList"></div>
+        <div id="winOverlay">
+            <div id="winFlag"></div>
+            <div id="winName"></div>
+            <button class="btn" id="replayBtn" onclick="location.reload()" style="margin-top:14px;display:none;">🔄 إعادة اللعب</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ===== نجوم الخلفية =====
+(function(){
+    const sc = document.getElementById('stars_bg');
+    sc.width = window.innerWidth; sc.height = window.innerHeight;
+    const sx = sc.getContext('2d');
+    for(let i=0;i<200;i++){
+        const x=Math.random()*sc.width, y=Math.random()*sc.height;
+        const r=Math.random()*1.2;
+        sx.beginPath(); sx.arc(x,y,r,0,Math.PI*2);
+        sx.fillStyle=`rgba(255,255,255,${0.1+Math.random()*0.5})`;
+        sx.fill();
+    }
+})();
+
+// ===== اللغة =====
+let lang = 'en';
+const T = {
+    en: {
+        remaining: 'Teams remaining: ',
+        winner: (name) => `🏆 ${name} 🏆`,
+        replay: '🔄 Play Again',
+        langBtn: 'عر',
+        title: 'WORLD CUP 2026',
+        sub: 'Top 20 Teams • FIFA Ranking'
+    },
+    ar: {
+        remaining: 'المنتخبات المتبقية: ',
+        winner: (name) => `🏆 ${name} 🏆`,
+        replay: '🔄 إعادة اللعب',
+        langBtn: 'EN',
+        title: 'كأس العالم 2026',
+        sub: 'أفضل 20 منتخب • ترتيب فيفا'
+    }
+};
+
+function toggleLang() {
+    lang = lang==='en'?'ar':'en';
+    document.getElementById('langBtn').innerText = T[lang].langBtn;
+    document.documentElement.dir = lang==='ar'?'rtl':'ltr';
+    document.getElementById('replayBtn').innerText = T[lang].replay;
+    document.getElementById('mainTitle').innerText = T[lang].title;
+    document.getElementById('subTitle').innerText = T[lang].sub;
+    // شاشة الاختيار
+    const setupTitles = {ar:'كأس العالم 2026', en:'WORLD CUP 2026'};
+    const setupDescs  = {ar:'اختر عدد المنتخبات (2-20) تُختار عشوائياً من أفضل 20 فيفا', en:'Choose number of teams (2–20) selected randomly from FIFA Top 20'};
+    const startLabels = {ar:'▶ ابدأ', en:'▶ Start'};
+    document.getElementById('setupTitle').innerText = setupTitles[lang];
+    document.getElementById('setupDesc').innerText  = setupDescs[lang];
+    document.getElementById('startBtn').innerText   = startLabels[lang];
+    const alive = balls.filter(b=>b.alive);
+    if (!gameOver && alive.length>0)
+        document.getElementById('info').innerText = T[lang].remaining + alive.length;
+    if (gameOver && winnerIdx>=0) {
+        const f = teams[winnerIdx];
+        document.getElementById('info').innerText = T[lang].winner(f.name[lang]);
+        document.getElementById('winName').innerText = f.name[lang];
+    }
+    buildRankList();
+}
+
+// ===== أفضل 20 منتخب فيفا 2026 =====
+const teams = [
+    { rank:1,  emoji:'🇦🇷', color:'#1a9be6', name:{ar:'الأرجنتين', en:'Argentina'}, short:{ar:'ARG', en:'ARG'} },
+    { rank:2,  emoji:'🇫🇷', color:'#003f9e', name:{ar:'فرنسا',      en:'France'},    short:{ar:'FRA', en:'FRA'} },
+    { rank:3,  emoji:'🇧🇪', color:'#d4000f', name:{ar:'بلجيكا',     en:'Belgium'},   short:{ar:'BEL', en:'BEL'} },
+    { rank:4,  emoji:'🇧🇷', color:'#009c3b', name:{ar:'البرازيل',   en:'Brazil'},    short:{ar:'BRA', en:'BRA'} },
+    { rank:5,  emoji:'🏴󠁧󠁢󠁥󠁮󠁧󠁿', color:'#cf142b', name:{ar:'إنجلترا',    en:'England'},   short:{ar:'ENG', en:'ENG'} },
+    { rank:6,  emoji:'🇵🇹', color:'#006600', name:{ar:'البرتغال',   en:'Portugal'},  short:{ar:'POR', en:'POR'} },
+    { rank:7,  emoji:'🇳🇱', color:'#ff6600', name:{ar:'هولندا',     en:'Netherlands'},short:{ar:'NED', en:'NED'} },
+    { rank:8,  emoji:'🇪🇸', color:'#c60b1e', name:{ar:'إسبانيا',    en:'Spain'},     short:{ar:'ESP', en:'ESP'} },
+    { rank:9,  emoji:'🇭🇷', color:'#cc0000', name:{ar:'كرواتيا',    en:'Croatia'},   short:{ar:'CRO', en:'CRO'} },
+    { rank:10, emoji:'🇮🇹', color:'#0066cc', name:{ar:'إيطاليا',    en:'Italy'},     short:{ar:'ITA', en:'ITA'} },
+    { rank:11, emoji:'🇩🇪', color:'#444444', name:{ar:'ألمانيا',    en:'Germany'},   short:{ar:'GER', en:'GER'} },
+    { rank:12, emoji:'🇺🇾', color:'#5cb8e4', name:{ar:'أوروغواي',   en:'Uruguay'},   short:{ar:'URU', en:'URU'} },
+    { rank:13, emoji:'🇺🇸', color:'#3c3b6e', name:{ar:'أمريكا',     en:'USA'},       short:{ar:'USA', en:'USA'} },
+    { rank:14, emoji:'🇲🇽', color:'#006847', name:{ar:'المكسيك',    en:'Mexico'},    short:{ar:'MEX', en:'MEX'} },
+    { rank:15, emoji:'🇸🇪', color:'#006aa7', name:{ar:'السويد',     en:'Sweden'},    short:{ar:'SWE', en:'SWE'} },
+    { rank:16, emoji:'🇩🇰', color:'#c60c30', name:{ar:'الدنمارك',   en:'Denmark'},   short:{ar:'DEN', en:'DEN'} },
+    { rank:17, emoji:'🇲🇦', color:'#c1272d', name:{ar:'المغرب',     en:'Morocco'},   short:{ar:'MAR', en:'MAR'} },
+    { rank:18, emoji:'🇨🇴', color:'#fcd116', name:{ar:'كولومبيا',   en:'Colombia'},  short:{ar:'COL', en:'COL'} },
+    { rank:19, emoji:'🇨🇭', color:'#ff0000', name:{ar:'سويسرا',     en:'Switzerland'},short:{ar:'SUI', en:'SUI'} },
+    { rank:20, emoji:'🇯🇵', color:'#bc002d', name:{ar:'اليابان',    en:'Japan'},     short:{ar:'JPN', en:'JPN'} },
+];
+
+// ===== بناء قائمة الترتيب =====
+function buildRankList() {
+    const alive = balls.filter(b=>b.alive).map(b=>b.idx);
+    const rl = document.getElementById('rankList');
+    rl.innerHTML = '';
+    teams.forEach((t,i) => {
+        const div = document.createElement('div');
+        div.className = 'rankItem' + (alive.includes(i)?'':' eliminated');
+        div.id = 'rank_'+i;
+        div.innerHTML = `<span class="rNum">${t.rank}</span><span class="rFlag">${t.emoji}</span><span>${t.short[lang]}</span>`;
+        rl.appendChild(div);
+    });
+}
+
+// ===== نظام الأصوات =====
+let AC = null;
+function getAC() {
+    if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)();
+    if (AC.state === 'suspended') AC.resume();
+    return AC;
+}
+
+// pop! صوت تصادم فقاعة
+function playSoundCollision() {
+    try {
+        const ac = getAC();
+        const t = ac.currentTime;
+        const o = ac.createOscillator();
+        const g = ac.createGain();
+        o.type = 'sine';
+        o.frequency.setValueAtTime(600 + Math.random()*400, t);
+        o.frequency.exponentialRampToValueAtTime(200, t + 0.12);
+        g.gain.setValueAtTime(0.5, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.13);
+        o.connect(g); g.connect(ac.destination);
+        o.start(t); o.stop(t + 0.14);
+    } catch(e){}
+}
+
+// thud صوت ارتداد الجدار
+function playSoundWall() {
+    try {
+        const ac = getAC();
+        const t = ac.currentTime;
+        const o = ac.createOscillator();
+        const g = ac.createGain();
+        o.type = 'sine';
+        o.frequency.setValueAtTime(220, t);
+        o.frequency.exponentialRampToValueAtTime(80, t + 0.1);
+        g.gain.setValueAtTime(0.35, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+        o.connect(g); g.connect(ac.destination);
+        o.start(t); o.stop(t + 0.13);
+    } catch(e){}
+}
+
+// أووووه صوت الهزيمة
+function playSoundEliminated() {
+    try {
+        const ac = getAC();
+        const t = ac.currentTime;
+        // طبقتان تهبطان معاً
+        [200, 300].forEach((freq, i) => {
+            const o = ac.createOscillator();
+            const g = ac.createGain();
+            o.type = 'sawtooth';
+            o.frequency.setValueAtTime(freq, t);
+            o.frequency.exponentialRampToValueAtTime(freq * 0.4, t + 0.8);
+            g.gain.setValueAtTime(0.3, t);
+            g.gain.linearRampToValueAtTime(0.25, t + 0.1);
+            g.gain.exponentialRampToValueAtTime(0.001, t + 0.85);
+            const f = ac.createBiquadFilter();
+            f.type = 'bandpass'; f.frequency.value = 800; f.Q.value = 2;
+            o.connect(f); f.connect(g); g.connect(ac.destination);
+            o.start(t); o.stop(t + 0.9);
+        });
+    } catch(e){}
+}
+
+// يييياي صوت الفوز
+function playSoundWinner() {
+    try {
+        const ac = getAC();
+        const t = ac.currentTime;
+        // تصاعد مبهج
+        [300, 400, 500, 650, 800, 1000].forEach((freq, i) => {
+            const o = ac.createOscillator();
+            const g = ac.createGain();
+            o.type = 'triangle';
+            o.frequency.setValueAtTime(freq, t + i*0.1);
+            o.frequency.exponentialRampToValueAtTime(freq * 1.5, t + i*0.1 + 0.2);
+            g.gain.setValueAtTime(0.4, t + i*0.1);
+            g.gain.exponentialRampToValueAtTime(0.001, t + i*0.1 + 0.35);
+            o.connect(g); g.connect(ac.destination);
+            o.start(t + i*0.1); o.stop(t + i*0.1 + 0.4);
+        });
+        // ضربات طبل احتفالية
+        for(let i = 0; i < 8; i++) {
+            const buf = ac.createBuffer(1, ac.sampleRate*0.15, ac.sampleRate);
+            const d = buf.getChannelData(0);
+            for(let j=0;j<d.length;j++) d[j]=(Math.random()*2-1)*Math.exp(-j/(ac.sampleRate*0.04));
+            const s = ac.createBufferSource();
+            const g = ac.createGain();
+            g.gain.value = 0.5;
+            s.buffer = buf;
+            s.connect(g); g.connect(ac.destination);
+            s.start(t + 0.6 + i*0.12);
+        }
+    } catch(e){}
+}
+
+// ===== فيزياء اللعبة =====
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const W=352, H=352, CX=W/2, CY=H/2;
+const WALL_R=148, BR=14, SPEED=2.8;
+const GATE_HALF=(BR*2.3)/WALL_R;
+
+function randVel(){
+    const a=Math.random()*Math.PI*2;
+    return{vx:Math.cos(a)*SPEED,vy:Math.sin(a)*SPEED};
+}
+function fixSpeed(b){
+    const s=Math.hypot(b.vx,b.vy);
+    if(s<0.01){const a=Math.random()*Math.PI*2;b.vx=Math.cos(a)*SPEED;b.vy=Math.sin(a)*SPEED;}
+    else{b.vx=b.vx/s*SPEED;b.vy=b.vy/s*SPEED;}
+}
+
+let balls=[];
+let rotation=0, gameOver=false, winnerIdx=-1;
+
+// ===== وضع الاختيار =====
+let currentMode = 'random'; // 'random' | 'pick'
+let selectedTeams = new Set(); // indices المحددة
+
+function setMode(mode) {
+    currentMode = mode;
+    document.getElementById('modeRandom').classList.toggle('active', mode==='random');
+    document.getElementById('modePick').classList.toggle('active', mode==='pick');
+    document.getElementById('randomSection').style.display = mode==='random' ? 'flex' : 'none';
+    document.getElementById('randomSection').style.flexDirection = 'column';
+    document.getElementById('randomSection').style.alignItems = 'center';
+    document.getElementById('randomSection').style.gap = '12px';
+    document.getElementById('teamPicker').style.display = mode==='pick' ? 'flex' : 'none';
+    if (mode==='pick') buildTeamGrid();
+}
+
+function buildTeamGrid() {
+    const grid = document.getElementById('teamGrid');
+    grid.innerHTML = '';
+    teams.forEach((t, i) => {
+        const card = document.createElement('div');
+        card.className = 'teamCard' + (selectedTeams.has(i) ? ' selected' : '');
+        card.id = 'tc_' + i;
+        card.innerHTML = `<span class="tcFlag">${t.emoji}</span><span class="tcName">${t.short[lang]}</span>`;
+        card.onclick = () => toggleTeam(i);
+        grid.appendChild(card);
+    });
+    updatePickerInfo();
+}
+
+function toggleTeam(i) {
+    if (selectedTeams.has(i)) {
+        selectedTeams.delete(i);
+    } else {
+        if (selectedTeams.size >= 20) return;
+        selectedTeams.add(i);
+    }
+    const card = document.getElementById('tc_' + i);
+    if (card) card.classList.toggle('selected', selectedTeams.has(i));
+    updatePickerInfo();
+}
+
+function updatePickerInfo() {
+    const n = selectedTeams.size;
+    const langTxt = lang==='ar'
+        ? `${n} محددين — (2 إلى 20)`
+        : `${n} selected — pick 2 to 20`;
+    document.getElementById('pickerInfo').innerText = langTxt;
+    // لون حسب الحالة
+    document.getElementById('pickerInfo').style.color =
+        n >= 2 ? 'rgba(0,255,136,0.9)' : 'rgba(255,215,0,0.7)';
+}
+
+function selectAll() {
+    teams.forEach((_, i) => selectedTeams.add(i));
+    buildTeamGrid();
+}
+
+function clearAll() {
+    selectedTeams.clear();
+    buildTeamGrid();
+}
+
+function selectRandom5() {
+    selectedTeams.clear();
+    const shuffled = [...Array(teams.length).keys()].sort(() => Math.random() - 0.5);
+    shuffled.slice(0, 5).forEach(i => selectedTeams.add(i));
+    buildTeamGrid();
+}
+
+// ===== شاشة الاختيار =====
+function setCount(n) {
+    document.getElementById('countInput').value = n;
+}
+function changeCount(d) {
+    const inp = document.getElementById('countInput');
+    let v = parseInt(inp.value)||20;
+    v = Math.min(20, Math.max(2, v+d));
+    inp.value = v;
+}
+function startGame() {
+    getAC();
+    let chosen = [];
+
+    if (currentMode === 'pick') {
+        if (selectedTeams.size < 2) {
+            document.getElementById('pickerInfo').style.color = '#ff4444';
+            document.getElementById('pickerInfo').innerText =
+                lang==='ar' ? '⚠️ اختر منتخبين على الأقل!' : '⚠️ Select at least 2 teams!';
+            return;
+        }
+        chosen = [...selectedTeams];
+    } else {
+        let count = parseInt(document.getElementById('countInput').value)||20;
+        count = Math.min(20, Math.max(2, count));
+        const shuffled = [...Array(teams.length).keys()].sort(()=>Math.random()-0.5);
+        chosen = shuffled.slice(0, count);
+    }
+
+    balls = [];
+    chosen.forEach(idx => {
+        let x,y,ok,tries=0;
+        do {
+            const r=BR*2+Math.random()*(WALL_R-BR*4);
+            const a=Math.random()*Math.PI*2;
+            x=CX+r*Math.cos(a); y=CY+r*Math.sin(a);
+            ok=balls.every(b=>Math.hypot(b.x-x,b.y-y)>BR*2.5);
+            tries++;
+        } while(!ok&&tries<500);
+        const v=randVel();
+        balls.push({x,y,vx:v.vx,vy:v.vy,idx,alive:true,alpha:1,ex:0,ey:0,evx:0,evy:0});
+    });
+
+    document.getElementById('info').innerText = T[lang].remaining + chosen.length;
+    document.getElementById('setupScreen').style.display = 'none';
+    buildRankList();
+    draw();
+}
+
+function inGate(a){
+    let d=a-rotation;
+    d=((d%(Math.PI*2))+(Math.PI*2))%(Math.PI*2);
+    if(d>Math.PI)d-=Math.PI*2;
+    return Math.abs(d)<=GATE_HALF;
+}
+
+let lastCollisionSound = 0;
+let lastWallSound = 0;
+
+function step(){
+    const alive=balls.filter(b=>b.alive);
+    alive.forEach(b=>{b.x+=b.vx;b.y+=b.vy;});
+
+    alive.forEach(b=>{
+        const dx=b.x-CX,dy=b.y-CY,dist=Math.hypot(dx,dy);
+        if(dist>=WALL_R-BR){
+            const wAng=Math.atan2(dy,dx);
+            if(inGate(wAng)){
+                b.alive=false;b.ex=b.x;b.ey=b.y;
+                b.evx=(dx/dist)*10;b.evy=(dy/dist)*10;
+                const el=document.getElementById('rank_'+b.idx);
+                if(el)el.classList.add('eliminated');
+                playSoundEliminated();
+            } else {
+                const rx=dx/dist,ry=dy/dist;
+                const rv=b.vx*rx+b.vy*ry;
+                if(rv>0){b.vx-=2*rv*rx;b.vy-=2*rv*ry;}
+                b.x=CX+(WALL_R-BR-2)*rx;
+                b.y=CY+(WALL_R-BR-2)*ry;
+                fixSpeed(b);
+                const now=performance.now();
+                if(now-lastWallSound>80){lastWallSound=now;playSoundWall();}
+            }
+        }
+    });
+
+    for(let i=0;i<alive.length;i++){
+        for(let j=i+1;j<alive.length;j++){
+            const a=alive[i],b=alive[j];
+            if(!a.alive||!b.alive)continue;
+            const dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy);
+            if(d<BR*2&&d>0.001){
+                const nx=dx/d,ny=dy/d;
+                const dvx=a.vx-b.vx,dvy=a.vy-b.vy,dot=dvx*nx+dvy*ny;
+                if(dot>0){a.vx-=dot*nx;a.vy-=dot*ny;b.vx+=dot*nx;b.vy+=dot*ny;}
+                const ov=(BR*2-d)/2+1;
+                a.x-=nx*ov;a.y-=ny*ov;b.x+=nx*ov;b.y+=ny*ov;
+                fixSpeed(a);fixSpeed(b);
+                const now=performance.now();
+                if(now-lastCollisionSound>60){lastCollisionSound=now;playSoundCollision();}
+            }
+        }
+    }
+    alive.forEach(b=>{if(b.alive)fixSpeed(b);});
+
+    balls.forEach(b=>{
+        if(!b.alive&&b.alpha>0){b.ex+=b.evx;b.ey+=b.evy;b.alpha-=0.025;}
+    });
+    balls=balls.filter(b=>b.alive||b.alpha>0);
+}
+
+// ===== مفرقعات =====
+let particles=[];
+const fwC=['#FFD700','#FFA500','#ff0','#f0f','#0ff','#fff','#f9a','#5f5'];
+function burst(x,y,big){
+    const n=big?120:80;
+    for(let i=0;i<n;i++){
+        const a=Math.random()*Math.PI*2,s=(big?2:1.5)+Math.random()*6;
+        particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,
+            color:fwC[i%fwC.length],life:1,
+            decay:0.008+Math.random()*0.012,size:big?2+Math.random()*4:1.5+Math.random()*3});
+    }
+}
+
+let fwFrame=0,winnerFlag='',winnerName='';
+
+function drawFireworks(){
+    ctx.fillStyle='rgba(2,0,8,0.15)';ctx.fillRect(0,0,W,H);
+    fwFrame++;
+    if(fwFrame%18===0)burst(W*(0.1+Math.random()*0.8),H*(0.05+Math.random()*0.65),fwFrame%54===0);
+
+    // دائرة ذهبية للفائز
+    ctx.beginPath();ctx.arc(CX,CY,WALL_R,0,Math.PI*2);
+    const grd=ctx.createLinearGradient(0,0,W,H);
+    grd.addColorStop(0,'#FFD700');grd.addColorStop(0.5,'#FFA500');grd.addColorStop(1,'#FFD700');
+    ctx.strokeStyle=grd;ctx.lineWidth=12;
+    ctx.shadowColor='#FFD700';ctx.shadowBlur=30;
+    ctx.stroke();ctx.shadowBlur=0;
+
+    // جسيمات
+    for(let i=particles.length-1;i>=0;i--){
+        const p=particles[i];
+        p.x+=p.vx;p.y+=p.vy;p.vy+=0.08;p.vx*=0.98;p.life-=p.decay;
+        if(p.life<=0){particles.splice(i,1);continue;}
+        ctx.globalAlpha=p.life;ctx.fillStyle=p.color;
+        ctx.shadowColor=p.color;ctx.shadowBlur=8;
+        ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fill();
+    }
+    ctx.globalAlpha=1;ctx.shadowBlur=0;
+
+    if(fwFrame<600||particles.length>0)requestAnimationFrame(drawFireworks);
+}
+
+// ===== رسم الفقاعة =====
+function drawBubble(x, y, team, isTop) {
+    const r = BR;
+
+    ctx.save();
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2); ctx.clip();
+
+    // خلفية بلون المنتخب
+    ctx.fillStyle = team.color;
+    ctx.fillRect(x-r, y-r, r*2, r*2);
+
+    // الراية تملأ الفقاعة
+    ctx.font = `${r*2.1}px Arial`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(team.emoji, x, y);
+
+    // شريط شفاف أسفل للاسم
+    ctx.fillStyle = 'rgba(0,0,0,0.52)';
+    ctx.fillRect(x-r, y+r*0.38, r*2, r*0.62);
+
+    // اسم مختصر
+    ctx.font = `bold ${r*0.48}px 'Bebas Neue', sans-serif`;
+    ctx.fillStyle = '#fff';
+    ctx.shadowColor='rgba(0,0,0,0.9)'; ctx.shadowBlur=3;
+    ctx.fillText(team.short[lang], x, y + r*0.72);
+    ctx.shadowBlur=0;
+
+    ctx.restore();
+
+    // حافة الفقاعة
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2);
+    ctx.strokeStyle = isTop ? '#FFD700' : 'rgba(255,255,255,0.45)';
+    ctx.lineWidth = isTop ? 2.5 : 1.2;
+    ctx.shadowColor = isTop ? '#FFD700' : 'transparent';
+    ctx.shadowBlur = isTop ? 16 : 0;
+    ctx.stroke(); ctx.shadowBlur=0;
+
+    // بريق زجاجي
+    ctx.save();
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2); ctx.clip();
+    ctx.beginPath(); ctx.arc(x-r*0.25, y-r*0.3, r*0.32, 0, Math.PI*2);
+    ctx.fillStyle='rgba(255,255,255,0.2)'; ctx.fill();
+    ctx.restore();
+
+    ctx.textAlign='left'; ctx.textBaseline='alphabetic';
+}
+
+function lightenColor(hex, amt) {
+    let n=parseInt(hex.replace('#',''),16);
+    let r=Math.min(255,((n>>16)&0xff)+amt);
+    let g=Math.min(255,((n>>8)&0xff)+amt);
+    let b=Math.min(255,(n&0xff)+amt);
+    return `rgb(${r},${g},${b})`;
+}
+function darkenColor(hex, amt) {
+    let n=parseInt(hex.replace('#',''),16);
+    let r=Math.max(0,((n>>16)&0xff)-amt);
+    let g=Math.max(0,((n>>8)&0xff)-amt);
+    let b=Math.max(0,(n&0xff)-amt);
+    return `rgb(${r},${g},${b})`;
+}
+
+// ===== حلقة الرسم =====
+function draw(){
+    ctx.clearRect(0,0,W,H);
+    rotation+=0.008;
+    const gS=rotation-GATE_HALF,gE=rotation+GATE_HALF;
+
+    // خلفية الدائرة الداخلية
+    ctx.beginPath();ctx.arc(CX,CY,WALL_R,0,Math.PI*2);
+    const bg=ctx.createRadialGradient(CX,CY,0,CX,CY,WALL_R);
+    bg.addColorStop(0,'rgba(20,0,40,0.6)');
+    bg.addColorStop(1,'rgba(2,0,8,0.9)');
+    ctx.fillStyle=bg;ctx.fill();
+
+    // خطوط داخلية
+    ctx.beginPath();ctx.arc(CX,CY,WALL_R*0.6,0,Math.PI*2);
+    ctx.strokeStyle='rgba(168,85,247,0.08)';ctx.lineWidth=1;ctx.stroke();
+    ctx.beginPath();ctx.arc(CX,CY,WALL_R*0.3,0,Math.PI*2);
+    ctx.strokeStyle='rgba(168,85,247,0.05)';ctx.stroke();
+
+    // الجدار
+    ctx.beginPath();ctx.arc(CX,CY,WALL_R,gE,gS+Math.PI*2);
+    ctx.strokeStyle='#a855f7';ctx.lineWidth=12;
+    ctx.shadowColor='#a855f7';ctx.shadowBlur=20;
+    ctx.stroke();ctx.shadowBlur=0;
+
+    // البوابة
+    ctx.beginPath();ctx.arc(CX,CY,WALL_R,gS,gE);
+    ctx.strokeStyle='#00ff88';ctx.lineWidth=6;
+    ctx.shadowColor='#00ff88';ctx.shadowBlur=35;
+    ctx.stroke();ctx.shadowBlur=0;
+
+    // سهم البوابة
+    const gMid=rotation, gx=CX+(WALL_R+22)*Math.cos(gMid), gy=CY+(WALL_R+22)*Math.sin(gMid);
+    ctx.font='16px Arial';ctx.fillText('➤',gx-8,gy+6);
+
+    step();
+
+    // رسم الخارجات (فقاعات تتلاشى)
+    balls.forEach(b=>{
+        if(!b.alive&&b.alpha>0){
+            ctx.globalAlpha=Math.max(0,b.alpha);
+            drawBubble(b.ex, b.ey, teams[b.idx], false);
+            ctx.globalAlpha=1;
+        }
+    });
+
+    // رسم الأحياء
+    balls.forEach(b=>{
+        if(!b.alive)return;
+        const isTop = teams[b.idx].rank===1;
+        drawBubble(b.x, b.y, teams[b.idx], isTop);
+    });
+
+    const alive=balls.filter(b=>b.alive);
+    document.getElementById('info').innerText = alive.length>1
+        ? T[lang].remaining+alive.length : '';
+
+    if(alive.length>1){
+        requestAnimationFrame(draw);
+    } else if(alive.length===1&&!gameOver){
+        gameOver=true;
+        winnerIdx=alive[0].idx;
+        const f=teams[winnerIdx];
+        winnerFlag=f.emoji; winnerName=f.name[lang];
+        document.getElementById('info').innerText=T[lang].winner(winnerName);
+        document.getElementById('replayBtn').innerText=T[lang].replay;
+        document.getElementById('replayBtn').style.display='inline-block';
+
+        // win overlay
+        document.getElementById('winFlag').innerText=winnerFlag;
+        document.getElementById('winName').innerText=winnerName;
+        document.getElementById('winOverlay').style.display='flex';
+
+        // صوت الفوز + مفرقعات
+        playSoundWinner();
+
+        burst(W*0.2,H*0.2,true);burst(W*0.8,H*0.15,true);burst(W*0.5,H*0.4,true);
+        burst(W*0.1,H*0.55,false);burst(W*0.9,H*0.5,false);
+        requestAnimationFrame(drawFireworks);
+    }
+}
+
+// ابنِ القائمة عند تبديل اللغة فقط - اللعبة تبدأ من startGame
+
+</script>
+</body>
+</html>
